@@ -1,0 +1,4 @@
+CTRL-A: getch() returns 1
+CTRL-B: getch() returns 2
+...
+CTRL-Z: getch() returns 26

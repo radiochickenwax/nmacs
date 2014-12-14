@@ -1,0 +1,25 @@
+Sat Dec 06, 2014 22:46:32
+	- Got a working menu class.  Still need to integrate with buffer class.
+	- the first step is done:  hopefully changed all buffer interactions to a subwin instead of stdscr
+Fri Dec 05, 2014 03:19:25
+	- Got file reads working from file mode
+	- Now I just need to get file writes to work
+	- next steps after that are writing to a new file
+	
+Fri Dec 05, 2014 00:30:50
+	- Still can't open files from file editor
+	- Could define keymaps with function pointers: http://www.cplusplus.com/forum/general/14848/
+	
+Thu Dec 04, 2014 07:14:02
+	- added some polymorphism.
+	- still can't open files.
+	- still can't switch buffers
+	- need to add keybindings for fileEditor mode
+
+Thu Dec 04, 2014 04:00:23
+	- File editors still can't open files for some reason
+	- Text editors can open files, but the key presses are screwy.
+
+	- I'm trying to move keypresses out of the buffer base class
+	- Just trying to move them into world.
+	- tab keys break things

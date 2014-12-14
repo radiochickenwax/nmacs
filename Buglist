@@ -1,0 +1,7 @@
+1. menus delayed
+2. file browsing stalls on "." and ".."
+3. menus are misaligned in x-direction
+4. many menu items don't work yet (list them here)
+5. first line gets indented incorrectly
+6. tab keys aren't handled well
+7. boost c++ should be removed
