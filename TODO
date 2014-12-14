@@ -1,0 +1,20 @@
+1. see buglist
+* priority 1 [0/9]
+
+1. [ ] implement gameOfLife
+2. [ ] use linux file commands instead of boost c++
+3. [ ] implement horizontal scrolling and line-wrapping
+4. [ ] figure out tab keys
+5. [ ] implement mark and region
+6. [ ] implement line numbers on left side
+7. [ ] implement function pointers for menu structures
+8. [ ] use default ncurses colors
+9. [ ] implement search functions
+
+
+* priority 2 [0/5]
+1. [ ] search DED source code
+2. [ ] wrap shell commands
+3. [ ] implement org-mode (long project)
+4. [ ] build as a library (further separate interface from implementation)
+5. [ ] build as a daemon
