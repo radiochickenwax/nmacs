@@ -4,7 +4,6 @@
 
   Just an array of strings that can be printed on ncurses to test scrolling.
 
-
   This version uses a plain GArray
  */
 #include <ncurses.h>
@@ -38,10 +37,8 @@ int main()
 {
   //GString line; 
   GArray* lines; // array of lines
-  //GPtrArray *lines; // array of lines
-  //lines = g_ptr_array_new(); // initialize array of lines
   lines = g_array_new(FALSE,FALSE,sizeof(GString *));
-  // can find array size with lines->len whcih will return a guint
+  // can find array size with lines->len which will return a guint
   // a guint is an unsigned int
   
   
@@ -53,18 +50,12 @@ int main()
 
 
   // add text to lines
-  // char ar[256]; 
   GString* ar;
   for (int i = 0; i < 100; i++)
     {
       ar = g_string_new("");
-      // printw("%d - lots and lots of lines flowing down the terminal\n", i);
-      //snprintf(ar, 256, "%d - lots and lots of lines flowing down the terminal\n",i);
       g_string_append_printf(ar, 
 			     "%d - lots and lots of lines flowing down the terminal\n",i);
-      // print2vec(ar);
-      // g_ptr_array_add(lines, (gpointer)ar);
-      // g_array_add(lines, (gpointer)ar); // invalid function
       g_array_append_val(lines, ar);
       refresh();
     }
@@ -79,17 +70,9 @@ int main()
       // need to extract from it the jth char
       // store ith line as a new GString
       GString* line;
-      //line = g_string_new(NULL);
       line = g_array_index(lines,GString*,i);
-      //g_string_append(line,g_array_index(lines,const gchar*,i));
       for (int j = 0; j < min(xmax,(int)line->len); j++) 
-      /* for (int j = 0;  */
-      /* 	   j < min(xmax,(int) g_array_index(lines,GString,i)->len);  */
-      /* 	   j++)  */
-	{
 	  wprintw(stdscr,"%c",line->str[j]);
-	  //wprintw(stdscr,"%c",g_array_index(lines,const gchar*,i)->str[j]);
-	}
     }
 
   getch();
