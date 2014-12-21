@@ -8,7 +8,7 @@
  */
 #include <ncurses.h>
 #include <glib.h>
-#include <stdlib.h>
+//#include <stdlib.h>
 
 #ifndef min
 #define min(a,b) (((a) < (b)) ? (a) : (b))
@@ -36,11 +36,12 @@
 void displayLines(GArray* lines,
 		  int startLine,
 		  int finishLine){
-  int xmax,ymax;
+  int xmax,ymax,ty,tx;
   getmaxyx(stdscr,ymax,xmax);
+  getyx(stdscr,ty,tx);
   for (int i = startLine; i < finishLine; i++) // get ith line
     { 
-      move(i,0);
+      move(startLine-i,0);
       // g_ptr_array_index(lines,i) contains ith line
       // need to extract from it the jth char
       // store ith line as a new GString
@@ -51,6 +52,7 @@ void displayLines(GArray* lines,
 	//for (int j = 0; j < line->len; j++)
 	wprintw(stdscr,"%c",line->str[j]);
     }
+  wmove(stdscr,ty,tx);
   refresh();
 }
 
@@ -113,21 +115,24 @@ void scrollBufferREPL(GArray* lines){
 		    currentLine++;
 		    refresh();
 		  }
+		wmove(stdscr,cy+1,cx);
 	      }
 	    else // scroll display
 	      {
 		if (currentLine+1 < lines->len)
 		  {
 		    currentLine++;
-		    startLine = getStartLine(lines,currentLine);
-		    finishLine = getFinishLine(lines,currentLine);
+		    // startLine = getStartLine(lines,currentLine);
+		    // finishLine = getFinishLine(lines,currentLine);
+		    startLine++;
+		    finishLine++;
 		  }
 	      }
 	    //displayLines(lines,startLine,finishLine);
 	  } // end key_down
 	} // end switch
       displayLines(lines,startLine,finishLine);
-    }
+    } // end REPL
 }
 
 int main()
