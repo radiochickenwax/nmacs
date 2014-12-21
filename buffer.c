@@ -33,13 +33,110 @@
   
 // }
 
+void displayLines(GArray* lines,
+		  int startLine,
+		  int finishLine){
+  int xmax,ymax;
+  getmaxyx(stdscr,ymax,xmax);
+  for (int i = startLine; i < finishLine; i++) // get ith line
+    { 
+      move(i,0);
+      // g_ptr_array_index(lines,i) contains ith line
+      // need to extract from it the jth char
+      // store ith line as a new GString
+      GString* line;
+      line = g_array_index(lines,GString*,i);
+      // print jth char of ith line
+      for (int j = 0; j < min(xmax,(int)line->len); j++) 
+	//for (int j = 0; j < line->len; j++)
+	wprintw(stdscr,"%c",line->str[j]);
+    }
+  refresh();
+}
+
+int getStartLine(GArray* lines,
+		  int currentLine)
+{
+  int cy,cx;
+  getyx(stdscr,cy,cx);
+  int minBoundary = currentLine - cy;
+  // startLine must be >= 0 
+  return (minBoundary >= 0) ? minBoundary : 0;
+}
+
+int getFinishLine(GArray* lines,
+		  int currentLine)
+{
+  int cy,cx, xmax,ymax;
+  getyx(stdscr,cy,cx);
+  getmaxyx(stdscr,ymax,xmax);
+  int maxBoundary = currentLine + ymax - cy;
+  return (maxBoundary < lines->len) ? maxBoundary : lines->len;
+}
+
+
+void scrollBufferREPL(GArray* lines){
+  int xmax,ymax,cx,cy;
+  getmaxyx(stdscr,ymax,xmax);
+  int key;
+
+  int startLine = 0;
+  int currentLine = 0;
+  int finishLine = ymax-1;
+
+  displayLines(lines,startLine,finishLine);
+
+  wmove(stdscr,0,0);
+
+
+  bool editorRunning = true;
+  
+
+  while (editorRunning)
+    {
+      getmaxyx(stdscr,ymax,xmax);
+      getyx(stdscr,cy,cx);
+      key = getch();  
+      switch (key)
+	{
+	case KEY_UP:
+	  {
+	  }
+	case KEY_DOWN:
+	  {
+	    //if (currentLine+1 < ymax-1)
+	    if (cy+1 < ymax-1) // don't scroll display
+	      {
+		if (cy+1 < lines->len)
+		  {
+		    wmove(stdscr,cy+1,cx);
+		    currentLine++;
+		    refresh();
+		  }
+	      }
+	    else // scroll display
+	      {
+		if (currentLine+1 < lines->len)
+		  {
+		    currentLine++;
+		    startLine = getStartLine(lines,currentLine);
+		    finishLine = getFinishLine(lines,currentLine);
+		  }
+	      }
+	    //displayLines(lines,startLine,finishLine);
+	  } // end key_down
+	} // end switch
+      displayLines(lines,startLine,finishLine);
+    }
+}
+
 int main()
 {
   // init curses
   // -----------
   initscr();
   cbreak();
-  curs_set(2);
+  //curs_set(2);
   noecho();
   keypad(stdscr,true);
   // end curses init
@@ -54,9 +151,6 @@ int main()
   // can find array size with lines->len which will return a guint
   // a guint is an unsigned int
 
-  int startLine = 0;
-  int finishLine = ymax;
-  
 
 
   // add text to lines
@@ -72,21 +166,10 @@ int main()
       g_array_append_val(lines, ar);
     }
 
-  // display lines
-  // --------------
-  for (int i = 0; i < ymax; i++) // get ith line
-    { 
-      move(i,0);
-      // g_ptr_array_index(lines,i) contains ith line
-      // need to extract from it the jth char
-      // store ith line as a new GString
-      GString* line;
-      line = g_array_index(lines,GString*,i);
-      // print jth char of ith line
-      for (int j = 0; j < min(xmax,(int)line->len); j++) 
-	  wprintw(stdscr,"%c",line->str[j]);
-    }
 
-  getch();
+  //displayLines(lines);
+  // REPL starts here
+  scrollBufferREPL(lines);
+
   endwin();
 }
