@@ -39,6 +39,8 @@ void displayLines(GArray* lines,
   int xmax,ymax,ty,tx;
   getmaxyx(stdscr,ymax,xmax);
   getyx(stdscr,ty,tx);
+  clear();
+  refresh();
   for (int i = startLine; i < finishLine; i++) // get ith line
     { 
       move(startLine-i,0);
@@ -72,7 +74,7 @@ int getFinishLine(GArray* lines,
   int cy,cx, xmax,ymax;
   getyx(stdscr,cy,cx);
   getmaxyx(stdscr,ymax,xmax);
-  int maxBoundary = currentLine + ymax - cy;
+  int maxBoundary = currentLine + ymax - cy - 1;
   return (maxBoundary < lines->len) ? maxBoundary : lines->len;
 }
 
@@ -103,7 +105,26 @@ void scrollBufferREPL(GArray* lines){
 	{
 	case KEY_UP:
 	  {
-	  }
+	    if (cy-1 >= 0) // don't scroll display 
+	      {
+	    	wmove(stdscr,cy-1,cx);
+	    	currentLine--;
+	      }
+	    else // scroll display
+	      {
+	    	if (currentLine-1 >= 0)
+	    	  {
+	    	    wmove(stdscr,cy-1,cx);
+	    	    currentLine--;
+	    	    //startLine = getStartLine(lines,currentLine);
+	    	    //finishLine = getFinishLine(lines,currentLine);
+	    	    startLine--;
+	    	    finishLine--;
+	    	  }
+	      }
+	    //printw("key_up pressed");
+	    break;
+	  } // end key_up
 	case KEY_DOWN:
 	  {
 	    //if (currentLine+1 < ymax-1)
@@ -113,7 +134,7 @@ void scrollBufferREPL(GArray* lines){
 		  {
 		    wmove(stdscr,cy+1,cx);
 		    currentLine++;
-		    refresh();
+		    //refresh();
 		  }
 		wmove(stdscr,cy+1,cx);
 	      }
@@ -122,14 +143,19 @@ void scrollBufferREPL(GArray* lines){
 		if (currentLine+1 < lines->len)
 		  {
 		    currentLine++;
-		    // startLine = getStartLine(lines,currentLine);
-		    // finishLine = getFinishLine(lines,currentLine);
-		    startLine++;
-		    finishLine++;
+		    startLine = getStartLine(lines,currentLine);
+		    finishLine = getFinishLine(lines,currentLine);
+		    //startLine++;
+		    //finishLine++;
 		  }
 	      }
 	    //displayLines(lines,startLine,finishLine);
+	    break;
 	  } // end key_down
+	default: 
+	  {
+	    break;
+	  }
 	} // end switch
       displayLines(lines,startLine,finishLine);
     } // end REPL
@@ -141,7 +167,7 @@ int main()
   // -----------
   initscr();
   cbreak();
-  //curs_set(2);
+  curs_set(2);
   noecho();
   keypad(stdscr,true);
   // end curses init
