@@ -158,15 +158,42 @@ void scrollBufferREPL(GArray* lines){
 	    line = g_array_index(lines,GString*,currentLine);
 	    if (cx+1 < line->len)
 	      wmove(stdscr,cy,cx+1);
-	    else
+	    else // duplicate key_down functionality
 	      {
-		if (cy+1 < ymax)
-		  if (currentLine+1 < lines->len)
-		    {
-		      wmove(stdscr,cy+1,0);
-		      currentLine++;
-		    }
-	      }
+		// if (cy+1 < ymax-1)
+		//   if (currentLine+1 < lines->len)
+		//     {
+		//       wmove(stdscr,cy+1,0);
+		//       currentLine++;
+		//     }
+		
+		// need to duplicate key_down functionality.
+		// key_down(lines,currentLine,cy,cx);
+		// this doesn't warrant a broken out function just yet
+		if (cy+1 < ymax-1) // don't scroll display
+		  {
+		    if (cy+1 < lines->len)
+		      {
+			wmove(stdscr,cy+1,0);
+			currentLine++;
+			//refresh();
+		      }
+		    wmove(stdscr,cy+1,0);
+		  }
+		else // scroll display
+		  {
+		    if (currentLine+1 < lines->len)
+		      {
+			currentLine++;
+			startLine = getStartLine(lines,currentLine);
+			finishLine = getFinishLine(lines,currentLine);
+			wmove(stdscr,cy,0); // put cursor at beginning of line
+			//startLine++;
+			//finishLine++;
+		      }
+		  }
+
+	      } // 
 	    break;
 	  } // end key_right
 	case KEY_LEFT: 
