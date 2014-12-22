@@ -40,7 +40,7 @@ void displayLines(GArray* lines,
   getmaxyx(stdscr,ymax,xmax);
   getyx(stdscr,ty,tx);
   clear();
-  refresh();
+  //refresh();
   for (int i = startLine; i < finishLine; i++) // get ith line
     { 
       move(startLine-i,0);
@@ -168,11 +168,25 @@ void scrollBufferREPL(GArray* lines){
 		    }
 	      }
 	    break;
-	  }
+	  } // end key_right
 	case KEY_LEFT: 
 	  {
+	    if (cx-1 >= 0) // stay on same line
+	      wmove(stdscr,cy,cx-1);
+	    else // move to prev line
+	      {
+		if (currentLine-1 >= 0)
+		  {
+		    currentLine--;
+		    GString* line;
+		    line = g_array_index(lines,GString*,currentLine);
+		    wmove(stdscr,cy-1,
+			  line->len-1
+			  );
+		  }
+	      }
 	    break;
-	  }
+	  } // end key_left
 	default: 
 	  {
 	    break;
