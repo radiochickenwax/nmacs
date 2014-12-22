@@ -152,6 +152,27 @@ void scrollBufferREPL(GArray* lines){
 	    //displayLines(lines,startLine,finishLine);
 	    break;
 	  } // end key_down
+	case KEY_RIGHT: 
+	  {
+	    GString* line;
+	    line = g_array_index(lines,GString*,currentLine);
+	    if (cx+1 < line->len)
+	      wmove(stdscr,cy,cx+1);
+	    else
+	      {
+		if (cy+1 < ymax)
+		  if (currentLine+1 < lines->len)
+		    {
+		      wmove(stdscr,cy+1,0);
+		      currentLine++;
+		    }
+	      }
+	    break;
+	  }
+	case KEY_LEFT: 
+	  {
+	    break;
+	  }
 	default: 
 	  {
 	    break;
