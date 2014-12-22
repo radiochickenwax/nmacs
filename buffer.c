@@ -170,6 +170,14 @@ void scrollBufferREPL(GArray* lines){
 		// need to duplicate key_down functionality.
 		// key_down(lines,currentLine,cy,cx);
 		// this doesn't warrant a broken out function just yet
+		
+		/*
+		  Sun Dec 21, 2014 21:05:22
+		  Actually, this is a slightly different function that
+		  wouldn't work correctly by simply calling key_down
+		  if it existed.
+		 */
+
 		if (cy+1 < ymax-1) // don't scroll display
 		  {
 		    if (cy+1 < lines->len)
