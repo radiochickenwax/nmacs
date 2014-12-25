@@ -222,8 +222,23 @@ void scrollBufferREPL(GArray* lines){
 	      }
 	    break;
 	  } // end key_left
-	default: 
+	default:  // line gap
 	  {
+	    getyx(stdscr,cy,cx);
+	    GString* before,after,current;
+	    current = lines[currentLine].text;
+	    // split current line text into two strings
+	    // 1 before cursor, 1 after cursor
+	    before = current.substr(0,point.x); // includes current cursor
+	    after = current.substr(point.x,current.length());
+	    // push character into string "before" point
+	    before.push_back(thisChar);
+	    // concat "before" and "after" strings
+	    current = before + after;
+	    // update cursor
+	    wmove(bufSubWin,point.y,point.x+1);
+	    // restore line in structure
+	    lines[currentLine].text = current;
 	    break;
 	  }
 	} // end switch
