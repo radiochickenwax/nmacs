@@ -17,8 +17,8 @@
 GString* g_substring (GString *str, int index, int len)
 {
   GString* returnVal = g_string_new(NULL);
-  if (str->len <= len)
-    for (int i = index; i <= len; i++)
+  if (len <= str->len)
+    for (int i = index; i < len; i++)
       {
 	gchar j = str->str[i];
 	g_string_append_printf(returnVal, "%c",j);
@@ -241,22 +241,22 @@ void scrollBufferREPL(GArray* lines){
 	    GString *after;
 	    GString *current;
 	    // current = lines[currentLine].text;
-	     current = g_array_index(lines,GString*,currentLine);
+	    current = g_array_index(lines,GString*,currentLine);
 	    // // split current line text into two strings
 	    // // 1 before cursor, 1 after cursor
 
 	    // before = current.substr(0,point.x); // includes current cursor
 	    // before = g_strndup(current,cx); // includes current cursor
-	     before = g_substring(current,0,cx); // includes current cursor
+	    before = g_substring(current,0,cx); // includes current cursor
 
 	    // after = current.substr(point.x,current.length());
 	    // after = g_strndup(current+cx,current->len);
-	     after = g_substring(current,cx+1,current->len);
+	    after = g_substring(current,cx,current->len);
 
 	    // // push character into string "before" point
 	    // before.push_back(thisChar);
 	    // g_string_append(before, (gchar) key);
-	    g_string_append_printf(before, "%c",key);
+	    g_string_append_printf(before, "%c",(char)key);
 
 	    // // concat "before" and "after" strings
 	    // current = before + after;
@@ -270,7 +270,8 @@ void scrollBufferREPL(GArray* lines){
 
 	    // // restore line in structure
 	    // lines[currentLine].text = current;
-	    g_array_insert_val(lines,currentLine,current);
+	    // g_array_insert_val(lines,currentLine,&current);
+	    g_array_insert_vals(lines,currentLine,current,0);
 
 	    // clean up
 	    // g_string_free(before,TRUE);
