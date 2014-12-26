@@ -14,6 +14,18 @@
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+GString* g_substring (GString *str, int index, int len)
+{
+  GString* returnVal = g_string_new(NULL);
+  if (str->len <= len)
+    for (int i = index; i <= len; i++)
+      {
+	gchar j = str->str[i];
+	g_string_append_printf(returnVal, "%c",j);
+      }
+    //  return g_string_new_len (str->str, min (str->len - index, len));
+  return returnVal;
+}
 
 
 // // a line has a number and text
@@ -225,20 +237,46 @@ void scrollBufferREPL(GArray* lines){
 	default:  // line gap
 	  {
 	    getyx(stdscr,cy,cx);
-	    GString* before,after,current;
-	    current = lines[currentLine].text;
-	    // split current line text into two strings
-	    // 1 before cursor, 1 after cursor
-	    before = current.substr(0,point.x); // includes current cursor
-	    after = current.substr(point.x,current.length());
-	    // push character into string "before" point
-	    before.push_back(thisChar);
-	    // concat "before" and "after" strings
-	    current = before + after;
-	    // update cursor
-	    wmove(bufSubWin,point.y,point.x+1);
-	    // restore line in structure
-	    lines[currentLine].text = current;
+	    GString *before;
+	    GString *after;
+	    GString *current;
+	    // current = lines[currentLine].text;
+	     current = g_array_index(lines,GString*,currentLine);
+	    // // split current line text into two strings
+	    // // 1 before cursor, 1 after cursor
+
+	    // before = current.substr(0,point.x); // includes current cursor
+	    // before = g_strndup(current,cx); // includes current cursor
+	     before = g_substring(current,0,cx); // includes current cursor
+
+	    // after = current.substr(point.x,current.length());
+	    // after = g_strndup(current+cx,current->len);
+	     after = g_substring(current,cx+1,current->len);
+
+	    // // push character into string "before" point
+	    // before.push_back(thisChar);
+	    // g_string_append(before, (gchar) key);
+	    g_string_append_printf(before, "%c",key);
+
+	    // // concat "before" and "after" strings
+	    // current = before + after;
+	    g_string_assign(current, before->str); // push before into current
+	    g_string_append_printf(current,"%s",after->str); 
+
+
+	    // // update cursor
+	    // wmove(bufSubWin,point.y,point.x+1);
+	    wmove(stdscr,cy,cx+1);
+
+	    // // restore line in structure
+	    // lines[currentLine].text = current;
+	    g_array_insert_val(lines,currentLine,current);
+
+	    // clean up
+	    // g_string_free(before,TRUE);
+	    // g_string_free(after,TRUE);
+	    // g_string_free(current,TRUE);
+
 	    break;
 	  }
 	} // end switch
@@ -274,7 +312,7 @@ int main()
   GString* ar;
   for (int i = 0; i < 100; i++)
     {
-      ar = g_string_new(""); // initialize string
+      ar = g_string_new(NULL); // initialize string
       // push text to string
       g_string_append_printf(ar, 
 			     "%d - lots and lots of lines flowing down the terminal\n",i);
