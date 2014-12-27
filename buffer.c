@@ -234,6 +234,55 @@ void scrollBufferREPL(GArray* lines){
 	      }
 	    break;
 	  } // end key_left
+	case KEY_BACKSPACE: 
+	  {
+	    getyx(stdscr,cy,cx);
+	    GString *before;
+	    GString *after;
+	    GString *current;
+
+	    if (cx-1 >= 0) // stay on same line
+	      {
+		// // split current line text into two strings
+		current = g_array_index(lines,GString*,currentLine);
+		before = g_substring(current,0,cx-1); 
+		after = g_substring(current,cx,current->len);
+		
+		// // push character into string "before" point
+		///g_string_append_printf(before, "%c",(char)key);
+		
+		// // concat "before" and "after" strings
+		g_string_assign(current, before->str); // push before into current
+		g_string_append_printf(current,"%s",after->str); 
+
+		// // restore line in structure
+		g_array_insert_vals(lines,currentLine,current,0);
+		
+		// // update cursor
+		wmove(stdscr,cy,cx-1);
+
+	      }
+	    else // move to prev line
+	      {
+		if (currentLine > 0)
+		  {
+		    currentLine--;
+		    current = g_array_index(lines,GString*,currentLine);
+		    before = g_substring(current,0,current->len-1); 
+		    after = g_array_index(lines,GString*,currentLine+1);
+		    g_string_assign(current,before->str);
+		    g_string_append_printf(current,"%s",after->str);
+		    wmove(stdscr,cy-1,before->len);
+		    g_array_remove_index(lines,currentLine+1);
+		  }
+	      }
+	    refresh();
+	    startLine = getStartLine(lines,currentLine);
+	    finishLine = getFinishLine(lines,currentLine);
+
+	    break;
+	  } // end key_backspace
+
 	default:  // line gap
 	  {
 	    getyx(stdscr,cy,cx);
