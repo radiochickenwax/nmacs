@@ -282,7 +282,12 @@ void scrollBufferREPL(GArray* lines){
 
 	    break;
 	  } // end key_backspace
-
+	  
+	case KEY_ENTER:
+	  {
+	    
+	    break;
+	  }
 	default:  // line gap
 	  {
 	    getyx(stdscr,cy,cx);
