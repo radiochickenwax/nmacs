@@ -14,6 +14,11 @@
 #define min(a,b) (((a) < (b)) ? (a) : (b))
 #endif
 
+#define ENTER 10
+#define TAB 9
+#define ESCAPE 27
+
+
 GString* g_substring (GString *str, int index, int len)
 {
   GString* returnVal = g_string_new(NULL);
@@ -283,9 +288,33 @@ void scrollBufferREPL(GArray* lines){
 	    break;
 	  } // end key_backspace
 	  
-	case KEY_ENTER:
+	  //case KEY_ENTER:
+	case ENTER:
 	  {
-	    
+	    if (cy == 0)
+	      {
+		GString *emptyLine = g_string_new("\n");
+		g_array_insert_vals(lines,currentLine,emptyLine,1);
+		// currentLine++;      
+		if (currentLine + 1 == finishLine)
+		  {
+		    startLine++;
+		    currentLine++;
+		    finishLine++;
+		  }
+	      }
+	    else
+	      {
+		GString* before;
+		GString* after;
+		GString* current;
+		current = g_array_index(lines,GString*,currentLine);
+		before = g_substring(current,0,cx); 
+		after = g_substring(current,cx,current->len); 
+		g_array_insert_vals(lines,currentLine,before,1);
+		g_array_insert_vals(lines,currentLine+1,after,1);
+		
+	      }
 	    break;
 	  }
 	default:  // line gap
