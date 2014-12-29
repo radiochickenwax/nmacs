@@ -291,7 +291,7 @@ void scrollBufferREPL(GArray* lines){
 	  //case KEY_ENTER:
 	case ENTER:
 	  {
-	    if (cy == 0)
+	    if (cx == 0)
 	      {
 		GString *emptyLine = g_string_new("\n");
 		g_array_insert_vals(lines,currentLine,emptyLine,1);
@@ -310,10 +310,10 @@ void scrollBufferREPL(GArray* lines){
 		GString* current;
 		current = g_array_index(lines,GString*,currentLine);
 		before = g_substring(current,0,cx); 
-		after = g_substring(current,cx,current->len); 
-		g_array_insert_vals(lines,currentLine,before,1);
-		g_array_insert_vals(lines,currentLine+1,after,1);
-		
+		after = g_substring(current,cx+1,current->len); 
+		g_array_insert_vals(lines,currentLine,before,0);
+		g_array_insert_vals(lines,currentLine+1,after,0);
+		currentLine++;
 	      }
 	    break;
 	  }
