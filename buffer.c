@@ -314,13 +314,14 @@ void scrollBufferREPL(GArray* lines){
 		GString* after;
 		GString* current;
 		current = g_array_index(lines,GString*,currentLine);
-		current = g_substring(current,0,cx); 
-		g_string_append(current,"\n");
+		before = g_substring(current,0,cx); 
+		g_string_append(before,"\n");
 		after = g_substring(current,cx,current->len); 
 
 		g_array_remove_index(lines,currentLine);
-		g_array_insert_vals(lines,currentLine+1,&after,1);  // should get pushed to next line in next step
 		g_array_insert_vals(lines,currentLine,&before,1);
+		g_array_insert_vals(lines,currentLine+1,&after,1);  // should get pushed to next line in next step
+
 
 
 		currentLine++;
