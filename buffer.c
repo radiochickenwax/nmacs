@@ -261,7 +261,8 @@ void scrollBufferREPL(GArray* lines){
 		g_string_append_printf(current,"%s",after->str); 
 
 		// // restore line in structure
-		g_array_insert_vals(lines,currentLine,current,0);
+		g_array_insert_vals(lines,currentLine,&current,0);
+		// note the ampersand for "current".  I'm not sure of these details 
 		
 		// // update cursor
 		wmove(stdscr,cy,cx-1);
