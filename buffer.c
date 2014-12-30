@@ -50,6 +50,36 @@ GString* g_substring (GString *str, int index, int len)
   
 // }
 
+void stats(GArray* lines,
+	   int currentLine,
+	   int startLine,
+	   int finishLine)
+  {
+    wattron(stdscr,A_REVERSE);
+    int ty,tx;
+    getyx(stdscr,ty,tx); // store point
+    int cy = ty;
+    int cx = tx;
+    int ymax,xmax;
+    getmaxyx(stdscr,ymax,xmax);
+    
+    wmove(stdscr,ymax-1,0); 
+    int lineNumber = currentLine + 1;
+
+    //wmove(stdscr,finishLine,0); 
+    wclrtoeol(stdscr); // clear line
+    wmove(stdscr,ymax-1,0);
+    wattron(stdscr,A_BOLD);
+    // wprintw(stdscr,"%s: ",name.c_str());
+    wattroff(stdscr,A_BOLD);
+    wprintw(stdscr,"cx:%d,cy:%d,sl:%d,cl:%d,fl:%d,xmax:%d,ymax:%d,ln:%d,lines:%d",
+	    cx,cy,startLine,currentLine,finishLine,xmax,ymax,lineNumber,lines->len);
+    wrefresh(stdscr);
+    wmove(stdscr,ty,tx); // restore point
+    wattroff(stdscr,A_REVERSE);
+  }
+
+
 void displayLines(GArray* lines,
 		  int startLine,
 		  int finishLine){
@@ -380,6 +410,11 @@ void scrollBufferREPL(GArray* lines){
 	  }
 	} // end switch
       displayLines(lines,startLine,finishLine);
+      stats(lines,
+	    currentLine,
+	    startLine,
+	    finishLine);
+
     } // end REPL
 }
 
