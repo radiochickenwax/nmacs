@@ -60,7 +60,7 @@ void displayLines(GArray* lines,
   //refresh();
   for (int i = startLine; i < finishLine; i++) // get ith line
     { 
-      move(startLine-i,0);
+      wmove(stdscr,startLine-i,0);
       // g_ptr_array_index(lines,i) contains ith line
       // need to extract from it the jth char
       // store ith line as a new GString
@@ -291,17 +291,22 @@ void scrollBufferREPL(GArray* lines){
 	  //case KEY_ENTER:
 	case ENTER:
 	  {
+	    /*
+	      Tue Dec 30, 2014 12:24:45
+	      Note that g_array_insert_vals()  needs to use the ampersand &
+	      to address the value to insert for some reason. 
+
+	      Took me hours to realize this.
+	     */
 	    if (cx == 0)
 	      {
-		GString *emptyLine = g_string_new("\n");
-		g_array_insert_vals(lines,currentLine,emptyLine,1);
-		// currentLine++;      
-		if (currentLine + 1 == finishLine)
-		  {
-		    startLine++;
-		    currentLine++;
-		    finishLine++;
-		  }
+		GString *emptyLine;
+		emptyLine = g_string_new("\n");
+		g_array_insert_vals(lines,(guint)currentLine,&emptyLine,1);
+		currentLine++;      
+		wmove(stdscr,cy+1,0);
+		//startLine = getStartLine(lines,currentLine);
+		//finishLine = getFinishLine(lines,currentLine);
 	      }
 	    else
 	      {
@@ -309,11 +314,19 @@ void scrollBufferREPL(GArray* lines){
 		GString* after;
 		GString* current;
 		current = g_array_index(lines,GString*,currentLine);
-		before = g_substring(current,0,cx); 
-		after = g_substring(current,cx+1,current->len); 
-		g_array_insert_vals(lines,currentLine,before,0);
-		g_array_insert_vals(lines,currentLine+1,after,0);
+		current = g_substring(current,0,cx); 
+		g_string_append(current,"\n");
+		after = g_substring(current,cx,current->len); 
+
+		g_array_remove_index(lines,currentLine);
+		g_array_insert_vals(lines,currentLine+1,&after,1);  // should get pushed to next line in next step
+		g_array_insert_vals(lines,currentLine,&before,1);
+
+
 		currentLine++;
+		wmove(stdscr,cy+1,0);
+		startLine = getStartLine(lines,currentLine);
+		finishLine = getFinishLine(lines,currentLine);
 	      }
 	    break;
 	  }
