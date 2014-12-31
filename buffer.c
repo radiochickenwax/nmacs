@@ -183,7 +183,7 @@ void scrollBufferREPL(GArray* lines){
 		    currentLine++;
 		    //refresh();
 		  }
-		wmove(stdscr,cy+1,cx);
+		// wmove(stdscr,cy+1,cx);
 	      }
 	    else // scroll display
 	      {
