@@ -26,7 +26,7 @@
    - [X] fix delete window problem (doesn't delete)
    - [ ] functions in menu don't actually execute yet
    - [ ] merge with buffer.cpp somehow to execute functions
-
+   - [ ] 2017/11/18 code review.  Why is this even here?
 
 
  */
