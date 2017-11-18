@@ -5,6 +5,7 @@
   There should only be one class here that handles everything. 
   
   Likewise, there should only be one editing mode.  
+  TODO: code review
  */
 #ifndef BUFFER_H
 #define BUFFER_H
