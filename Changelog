@@ -23,3 +23,5 @@ Thu Dec 04, 2014 04:00:23
 	- I'm trying to move keypresses out of the buffer base class
 	- Just trying to move them into world.
 	- tab keys break things
+Sat Nov 18, 2017 
+        - updates.  Trying to find a way to work on this more regularly
