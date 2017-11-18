@@ -1,7 +1,7 @@
 #include "buffer.h"
 #include "menu.h"
 
-
+// TODO:  make this into a factory pattern - get rid of if/else
 class bufferMenu{
 public:
   int key;
