@@ -1,5 +1,7 @@
 /* 
-   This program should define a buffer object
+   This program should define a buffer object.
+   TODO: describe buffer object
+   TODO: add tests
  */
 #include "buffer.h"
 
@@ -469,6 +471,7 @@ void buffer::getUserInput()
     } // end while
 } // end getUserInput() 
 
+// TODO: make this a factory, get rid of switch
 void buffer::getUserInput(int keyPress)
 {
   switch (keyPress)
