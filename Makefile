@@ -10,6 +10,5 @@ buffer.o: buffer.cpp
 menu.o: menu.cpp
 	g++ -g -c menu.cpp -o menu.o
 
-
 clean: 
 	rm  buffer.o menu.o main.o nmacs
